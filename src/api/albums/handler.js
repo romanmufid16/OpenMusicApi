@@ -24,6 +24,7 @@ class AlbumHandler {
       },
     });
 
+    response.code(201);
     return response;
   }
 
