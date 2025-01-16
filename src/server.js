@@ -1,12 +1,12 @@
-require("dotenv").config();
-const Hapi = require("@hapi/hapi");
-const AlbumService = require("./services/postgres/AlbumService");
-const SongService = require("./services/postgres/SongService");
-const ClientError = require("./exceptions/ClientError");
-const albums = require("./api/albums");
-const AlbumsValidator = require("./validator/albums");
-const SongsValidator = require("./validator/Songs");
-const songs = require("./api/songs");
+require('dotenv').config();
+const Hapi = require('@hapi/hapi');
+const AlbumService = require('./services/postgres/AlbumService');
+const SongService = require('./services/postgres/SongService');
+const ClientError = require('./exceptions/ClientError');
+const albums = require('./api/albums');
+const AlbumsValidator = require('./validator/albums');
+const SongsValidator = require('./validator/Songs');
+const songs = require('./api/songs');
 
 const init = async () => {
   const albumService = new AlbumService();
@@ -17,16 +17,16 @@ const init = async () => {
     host: process.env.HOST,
     routes: {
       cors: {
-        origin: ["*"],
+        origin: ['*'],
       },
     },
   });
 
-  server.ext("onPreResponse", (request, h) => {
+  server.ext('onPreResponse', (request, h) => {
     const { response } = request;
     if (response instanceof ClientError) {
       const newResponse = h.response({
-        status: "fail",
+        status: 'fail',
         message: response.message,
       });
       newResponse.code(response.statusCode);
@@ -35,7 +35,7 @@ const init = async () => {
 
     if (response instanceof Error) {
       const newResponse = h.response({
-        status: "error",
+        status: 'error',
         message: response.message,
       });
       newResponse.code(500);

@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon ./src/server.js",
+    "start": "node ./src/server.js",
     "lint": "eslint ./src",
     "migrate": "node-pg-migrate"
   },

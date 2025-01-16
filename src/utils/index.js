@@ -1,7 +1,12 @@
-const toAlbumResponse = ({ id, name, year }) => ({
+const toAlbumResponse = ({ id, name, year, songs = [] }) => ({
   id,
   name,
   year,
+  songs: songs.map(({ id, title, performer }) => ({
+    id,
+    title,
+    performer,
+  })),
 });
 
 const toSongResponse = ({
@@ -22,4 +27,10 @@ const toSongResponse = ({
   albumId,
 });
 
-module.exports = { toAlbumResponse, toSongResponse };
+const toSongsResponses = ({ id, title, performer }) => ({
+  id,
+  title,
+  performer,
+});
+
+module.exports = { toAlbumResponse, toSongResponse, toSongsResponses };

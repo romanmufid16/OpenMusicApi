@@ -35,25 +35,26 @@ class SongHandler {
     return response;
   }
 
-  async getSongsHandler() {
-    const songs = await this._service.getSongs();
-    return {
+  async getSongsHandler(request, h) {
+    const { title, performer } = request.query;
+    const songs = await this._service.getSongs({ title, performer });
+    return h.response({
       status: "success",
       data: {
         songs,
       },
-    };
+    });
   }
 
   async getSongByIdHandler(request, h) {
     const { id } = request.params;
     const song = await this._service.getSongById(id);
-    return {
+    return h.response({
       status: "success",
       data: {
         song,
       },
-    };
+    });
   }
 
   async putSongByIdHandler(request, h) {
@@ -70,10 +71,10 @@ class SongHandler {
   async deleteSongByIdHandler(request, h) {
     const { id } = request.params;
     await this._service.deleteSongById(id);
-    return {
+    return h.response({
       status: "success",
       message: "Lagu berhasil dihapus",
-    };
+    });
   }
 }
 

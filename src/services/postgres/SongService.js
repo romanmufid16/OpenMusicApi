@@ -1,7 +1,7 @@
 const { nanoid } = require("nanoid");
 const { Pool } = require("pg");
 const InvariantError = require("../../exceptions/InvariantError");
-const { toSongResponse } = require("../../utils");
+const { toSongResponse, toSongsResponses } = require("../../utils");
 const NotFoundError = require("../../exceptions/NotFoundError");
 
 class SongService {
@@ -51,9 +51,25 @@ class SongService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
-    const result = await this._pool.query("SELECT * FROM songs");
-    return result.rows.map(toSongResponse);
+  async getSongs({ title, performer }) {
+    let query = "SELECT * FROM songs";
+    const params = [];
+
+    if (title || performer) {
+      const conditions = [];
+      if (title) {
+        conditions.push(`title ILIKE $${params.length + 1}`);
+        params.push(`%${title}%`);
+      }
+      if (performer) {
+        conditions.push(`performer ILIKE $${params.length + 1}`);
+        params.push(`%${performer}%`);
+      }
+      query += ` WHERE ${conditions.join(" AND ")}`;
+    }
+
+    const result = await this._pool.query(query, params);
+    return result.rows.map(toSongsResponses);
   }
 
   async getSongById(id) {
@@ -71,10 +87,7 @@ class SongService {
     return result.rows.map(toSongResponse)[0];
   }
 
-  async editSongById(
-    id,
-    { title, year, genre, performer, duration, albumId }
-  ) {
+  async editSongById(id, { title, year, genre, performer, duration, albumId }) {
     const updated_at = new Date().toISOString();
 
     if (albumId) {
@@ -91,7 +104,7 @@ class SongService {
     }
 
     const query = {
-      text: `UPDATE songs SET title=$1, year=$2, genre=$3, performer=$4, duration=$5, "albumId"=$6, updated_at=$7 WHERE id=$8 RETURNING id`,
+      text: 'UPDATE songs SET title=$1, year=$2, genre=$3, performer=$4, duration=$5, "albumId"=$6, updated_at=$7 WHERE id=$8 RETURNING id',
       values: [
         title,
         year,

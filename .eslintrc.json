@@ -1,15 +1,15 @@
 {
-  "env": {
-      "es2021": true,
-      "node": true
-  },
-  "extends": [
-      "airbnb-base"
-  ],
-  "parserOptions": {
-      "ecmaVersion": 2020
-  },
-  "rules": {
-      "no-console": "off"
-  }
+    "env": {
+      "es2021": true,  // Menggunakan fitur ECMAScript 2021
+      "node": true      // Menyatakan bahwa proyek ini berjalan di Node.js
+    },
+    "extends": [
+      "eslint:recommended"  // Menggunakan aturan dasar dari ESLint yang disarankan
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020  // Menggunakan ECMAScript 2020
+    },
+    "rules": {
+      "no-console": "off"  // Menonaktifkan peringatan untuk penggunaan console.log
+    }
 }
